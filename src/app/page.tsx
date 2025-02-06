@@ -1,12 +1,10 @@
-import GoogleDriveClone from "~/components/Drive-Contents";
-import { db } from "~/server/db";
-import { files_table, folders_table } from "~/server/db/schema";
+import Link from "next/link";
 
-export default async function Page() {
-  const foldersQuery = await db.select().from(folders_table);
-  const filesQuery = await db.select().from(files_table);
-
-  const [folders, files] = await Promise.all([foldersQuery, filesQuery]);
-
-  return <GoogleDriveClone files={files} folders={folders} />;
+export default function HomePage() {
+  return (
+    <div>
+      <h1>Home</h1>
+      <Link href={"/folder/1"}>Drive</Link>
+    </div>
+  );
 }
