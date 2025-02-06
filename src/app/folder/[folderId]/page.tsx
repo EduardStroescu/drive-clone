@@ -1,9 +1,6 @@
-import { eq } from "drizzle-orm";
-
 import DriveContents from "~/components/DriveContents";
 
-import { db } from "~/server/db";
-import { files_table, folders_table } from "~/server/db/schema";
+import { QUERIES } from "~/server/db/queries";
 
 export default async function Page(props: {
   params: Promise<{ folderId: string }>;
@@ -15,41 +12,18 @@ export default async function Page(props: {
     return <div>Invalid folder ID</div>;
   }
 
-  async function getAllParents(folderId: number) {
-    const parents = [];
-    let currentId: number | null = folderId;
-    while (currentId !== null) {
-      const folder = await db
-        .selectDistinct()
-        .from(folders_table)
-        .where(eq(folders_table.id, currentId));
-
-      if (!folder[0]) {
-        throw new Error("Parent folder not found");
-      }
-      parents.unshift(folder[0]);
-      currentId = folder[0]?.parent;
-    }
-    return parents;
-  }
-
-  const filesQuery = await db
-    .select()
-    .from(files_table)
-    .where(eq(files_table.parent, parsedFolderId));
-
-  const foldersQuery = await db
-    .select()
-    .from(folders_table)
-    .where(eq(folders_table.parent, parsedFolderId));
-
-  const parentsQuery = getAllParents(parsedFolderId);
-
   const [files, folders, parents] = await Promise.all([
-    filesQuery,
-    foldersQuery,
-    parentsQuery,
+    QUERIES.getFiles(parsedFolderId),
+    QUERIES.getFolders(parsedFolderId),
+    QUERIES.getParentsForFolder(parsedFolderId),
   ]);
 
-  return <DriveContents files={files} folders={folders} parents={parents} />;
+  return (
+    <DriveContents
+      files={files}
+      folders={folders}
+      parents={parents}
+      currentFolderId={parsedFolderId}
+    />
+  );
 }

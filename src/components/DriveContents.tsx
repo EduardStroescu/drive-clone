@@ -10,10 +10,12 @@ export default function DriveContents({
   files,
   folders,
   parents,
+  currentFolderId,
 }: {
   files: (typeof files_table.$inferSelect)[];
   folders: (typeof folders_table.$inferSelect)[];
   parents: (typeof folders_table.$inferSelect)[];
+  currentFolderId: number;
 }) {
   // const breadcrumbs = useMemo(() => {
   //   const breadcrumbs = [];
