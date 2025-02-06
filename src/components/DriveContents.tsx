@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import { Upload, ChevronRight } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { FolderRow, FileRow } from "~/components/ui/FileRow";
@@ -10,32 +9,30 @@ import Link from "next/link";
 export default function DriveContents({
   files,
   folders,
+  parents,
 }: {
   files: (typeof files_table.$inferSelect)[];
   folders: (typeof folders_table.$inferSelect)[];
+  parents: (typeof folders_table.$inferSelect)[];
 }) {
-  const [currentFolder, setCurrentFolder] = useState<number>(1);
+  // const breadcrumbs = useMemo(() => {
+  //   const breadcrumbs = [];
+  //   let currentId: number | null = currentFolder;
 
-  const handleFolderClick = (folderId: number) => {
-    setCurrentFolder(folderId);
-  };
+  //   while (currentId !== 1) {
+  //     const folder = folders.find((folder) => folder.id === currentId);
+  //     if (folder) {
+  //       breadcrumbs.unshift(folder);
+  //       currentId = folder.parent ?? 1;
+  //     } else {
+  //       break;
+  //     }
+  //   }
 
-  const breadcrumbs = useMemo(() => {
-    const breadcrumbs = [];
-    let currentId: number | null = currentFolder;
+  //   return breadcrumbs;
+  // }, [currentFolder, folders]);
 
-    while (currentId !== 1) {
-      const folder = folders.find((folder) => folder.id === currentId);
-      if (folder) {
-        breadcrumbs.unshift(folder);
-        currentId = folder.parent ?? 1;
-      } else {
-        break;
-      }
-    }
-
-    return breadcrumbs;
-  }, [currentFolder, folders]);
+  const breadcrumbs = parents;
 
   const handleUpload = () => {
     alert("Upload functionality would be implemented here");
@@ -54,13 +51,12 @@ export default function DriveContents({
           {breadcrumbs.map((folder) => (
             <div key={folder.id} className="flex items-center">
               <ChevronRight className="mx-2 text-gray-500" size={16} />
-              <Button
-                onClick={() => handleFolderClick(folder.id)}
-                variant="ghost"
+              <Link
+                href={"/folder/" + folder.id}
                 className="text-gray-300 hover:text-white"
               >
                 {folder.name}
-              </Button>
+              </Link>
             </div>
           ))}
         </div>
