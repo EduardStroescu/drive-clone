@@ -8,7 +8,7 @@ export function FolderRow({
   folder: typeof folders_table.$inferSelect;
 }) {
   return (
-    <li className="hover:bg-gray-750 border-b border-gray-700 px-6 py-4">
+    <li className="hover:bg-gray-750 border-b border-gray-700 px-6 py-4 hover:bg-gray-900 hover:shadow-xl hover:shadow-cyan-500">
       <div className="grid grid-cols-12 items-center gap-4">
         <div className="col-span-6 flex items-center">
           <Link
@@ -28,7 +28,7 @@ export function FolderRow({
 
 export function FileRow({ file }: { file: typeof files_table.$inferSelect }) {
   return (
-    <li className="hover:bg-gray-750 border-b border-gray-700 px-6 py-4">
+    <li className="hover:bg-gray-750 border-b border-gray-700 px-6 py-4 hover:bg-gray-900 hover:shadow-xl hover:shadow-cyan-500">
       <div className="grid grid-cols-12 items-center gap-4">
         <div className="col-span-6 flex items-center">
           <a
