@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
 import { ClerkProvider } from "@clerk/nextjs";
+import { PostHogProvider } from "~/providers/PostHogProvider";
 
 export const metadata: Metadata = {
   title: "SkyVault",
@@ -18,7 +19,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" className={`${GeistSans.variable}`}>
         <body className="min-h-screen bg-gray-900 p-8 text-gray-100">
-          {children}
+          <PostHogProvider>{children}</PostHogProvider>
         </body>
       </html>
     </ClerkProvider>
