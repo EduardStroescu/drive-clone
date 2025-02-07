@@ -4,6 +4,7 @@ import { and, eq, isNull } from "drizzle-orm";
 
 import { db } from "~/server/db";
 import {
+  DB_FileType,
   files_table as filesSchema,
   folders_table as foldersSchema,
 } from "~/server/db/schema";
@@ -54,5 +55,11 @@ export const QUERIES = {
         and(eq(foldersSchema.ownerId, userId), isNull(foldersSchema.parent)),
       );
     return folder[0];
+  },
+};
+
+export const MUTATIONS = {
+  createFile: async function (file: Omit<DB_FileType, "id" | "createdAt">) {
+    return await db.insert(filesSchema).values(file);
   },
 };

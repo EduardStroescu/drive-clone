@@ -1,11 +1,12 @@
 "use client";
 
-import { Upload, ChevronRight } from "lucide-react";
-import { Button } from "~/components/ui/button";
+import { ChevronRight } from "lucide-react";
 import { FolderRow, FileRow } from "~/components/ui/FileRow";
 import { type files_table, type folders_table } from "~/server/db/schema";
 import Link from "next/link";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { UploadButton } from "./ui/UploadThing";
+import { useRouter } from "next/navigation";
 
 export default function DriveContents({
   files,
@@ -18,28 +19,7 @@ export default function DriveContents({
   parents: (typeof folders_table.$inferSelect)[];
   currentFolderId: number;
 }) {
-  // const breadcrumbs = useMemo(() => {
-  //   const breadcrumbs = [];
-  //   let currentId: number | null = currentFolder;
-
-  //   while (currentId !== 1) {
-  //     const folder = folders.find((folder) => folder.id === currentId);
-  //     if (folder) {
-  //       breadcrumbs.unshift(folder);
-  //       currentId = folder.parent ?? 1;
-  //     } else {
-  //       break;
-  //     }
-  //   }
-
-  //   return breadcrumbs;
-  // }, [currentFolder, folders]);
-
-  const breadcrumbs = parents;
-
-  const handleUpload = () => {
-    alert("Upload functionality would be implemented here");
-  };
+  const navigate = useRouter();
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -51,7 +31,7 @@ export default function DriveContents({
           >
             My Drive
           </Link>
-          {breadcrumbs.map((folder) => (
+          {parents.map((folder) => (
             <div key={folder.id} className="flex items-center">
               <ChevronRight className="mx-2 text-gray-500" size={16} />
               <Link
@@ -96,6 +76,15 @@ export default function DriveContents({
           ))}
         </ul>
       </div>
+      <UploadButton
+        endpoint="imageUploader"
+        onClientUploadComplete={() => {
+          navigate.refresh();
+        }}
+        onUploadError={(error: Error) => {
+          alert(`ERROR! ${error.message}`);
+        }}
+      />
     </div>
   );
 }
