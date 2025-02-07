@@ -77,13 +77,11 @@ export default function DriveContents({
         </ul>
       </div>
       <UploadButton
-        endpoint="imageUploader"
+        endpoint="driveUploader"
         onClientUploadComplete={() => {
           navigate.refresh();
         }}
-        onUploadError={(error: Error) => {
-          alert(`ERROR! ${error.message}`);
-        }}
+        input={{ folderId: currentFolderId }}
       />
     </div>
   );

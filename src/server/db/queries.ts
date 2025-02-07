@@ -1,28 +1,29 @@
 import "server-only";
 
-import { and, eq, isNull } from "drizzle-orm";
-
 import { db } from "~/server/db";
 import {
-  DB_FileType,
   files_table as filesSchema,
   folders_table as foldersSchema,
+  type DB_FileType,
 } from "~/server/db/schema";
+import { eq, isNull, and } from "drizzle-orm";
 
 export const QUERIES = {
   getFolders: function (folderId: number) {
     return db
       .select()
       .from(foldersSchema)
-      .where(eq(foldersSchema.parent, folderId));
+      .where(eq(foldersSchema.parent, folderId))
+      .orderBy(foldersSchema.id);
   },
   getFiles: function (folderId: number) {
     return db
       .select()
       .from(filesSchema)
-      .where(eq(filesSchema.parent, folderId));
+      .where(eq(filesSchema.parent, folderId))
+      .orderBy(filesSchema.id);
   },
-  getParentsForFolder: async function (folderId: number) {
+  getAllParentsForFolder: async function (folderId: number) {
     const parents = [];
     let currentId: number | null = folderId;
     while (currentId !== null) {
@@ -39,12 +40,12 @@ export const QUERIES = {
     }
     return parents;
   },
-
-  getFolderById: function (folderId: number) {
-    return db
+  getFolderById: async function (folderId: number) {
+    const folder = await db
       .select()
       .from(foldersSchema)
       .where(eq(foldersSchema.id, folderId));
+    return folder[0];
   },
 
   getRootFolderForUser: async function (userId: string) {
@@ -59,7 +60,51 @@ export const QUERIES = {
 };
 
 export const MUTATIONS = {
-  createFile: async function (file: Omit<DB_FileType, "id" | "createdAt">) {
-    return await db.insert(filesSchema).values(file);
+  createFile: async function (input: {
+    file: {
+      name: string;
+      size: number;
+      url: string;
+      parent: number;
+    };
+    userId: string;
+  }) {
+    return await db.insert(filesSchema).values({
+      ...input.file,
+      ownerId: input.userId,
+    });
+  },
+
+  onboardUser: async function (userId: string) {
+    const rootFolder = await db
+      .insert(foldersSchema)
+      .values({
+        name: "Root",
+        parent: null,
+        ownerId: userId,
+      })
+      .$returningId();
+
+    const rootFolderId = rootFolder[0]!.id;
+
+    await db.insert(foldersSchema).values([
+      {
+        name: "Trash",
+        parent: rootFolderId,
+        ownerId: userId,
+      },
+      {
+        name: "Shared",
+        parent: rootFolderId,
+        ownerId: userId,
+      },
+      {
+        name: "Documents",
+        parent: rootFolderId,
+        ownerId: userId,
+      },
+    ]);
+
+    return rootFolderId;
   },
 };

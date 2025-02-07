@@ -1,4 +1,3 @@
-import "server-only";
 import {
   int,
   text,
@@ -15,7 +14,7 @@ import {
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
 export const createTable = singlestoreTableCreator(
-  (name) => `drive_tutorial_${name}`,
+  (name) => `skyvault_${name}`,
 );
 
 export const files_table = createTable(

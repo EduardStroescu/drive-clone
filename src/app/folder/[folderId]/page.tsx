@@ -15,7 +15,7 @@ export default async function Page(props: {
   const [files, folders, parents] = await Promise.all([
     QUERIES.getFiles(parsedFolderId),
     QUERIES.getFolders(parsedFolderId),
-    QUERIES.getParentsForFolder(parsedFolderId),
+    QUERIES.getAllParentsForFolder(parsedFolderId),
   ]);
 
   return (
