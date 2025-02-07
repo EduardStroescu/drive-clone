@@ -24,7 +24,7 @@ export function FolderRow({
         <div className="col-span-3 text-gray-400">Folder</div>
         <div className="col-span-3 text-gray-400">--</div>
         <Button
-          variant="destructive"
+          variant="ghost"
           size="sm"
           className="col-span-1 w-min"
           aria-label="Delete file"
@@ -55,7 +55,7 @@ export function FileRow({ file }: { file: typeof files_table.$inferSelect }) {
         <div className="col-span-3 text-gray-400">File</div>
         <div className="col-span-3 text-gray-400">{file.size}</div>
         <Button
-          variant="destructive"
+          variant="ghost"
           size="sm"
           className="col-span-1 w-min"
           aria-label="Delete file"

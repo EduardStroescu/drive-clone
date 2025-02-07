@@ -13,11 +13,13 @@ export default function DriveContents({
   folders,
   parents,
   currentFolderId,
+  rootFolder,
 }: {
   files: (typeof files_table.$inferSelect)[];
   folders: (typeof folders_table.$inferSelect)[];
   parents: (typeof folders_table.$inferSelect)[];
   currentFolderId: number;
+  rootFolder: typeof folders_table.$inferSelect;
 }) {
   const navigate = useRouter();
 
@@ -26,7 +28,7 @@ export default function DriveContents({
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center">
           <Link
-            href={"/folder/1"}
+            href={"/folder/" + rootFolder.id}
             className="mr-2 text-gray-300 hover:text-white"
           >
             My Drive
@@ -81,6 +83,7 @@ export default function DriveContents({
         onClientUploadComplete={() => {
           navigate.refresh();
         }}
+        className="my-8"
         input={{ folderId: currentFolderId }}
       />
     </div>

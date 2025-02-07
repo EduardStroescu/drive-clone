@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" className={`${GeistSans.variable}`}>
-        <body className="min-h-screen bg-gray-900 p-8 text-gray-100">
+        <body>
           <PostHogProvider>{children}</PostHogProvider>
         </body>
       </html>
